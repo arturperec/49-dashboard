@@ -11,7 +11,7 @@
   color-scheme: light;
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
   --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10); --wash: rgba(11,11,11,0.05);
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
   --up: #006300; --down: #d03b3b;
   --q100: #cde2fb; --q200: #9ec5f4; --q300: #6da7ec; --q400: #3987e5; --q500: #256abf; --q600: #184f95; --q700: #0d366b;
   --empty: #f0efec;
@@ -21,7 +21,7 @@
     color-scheme: dark;
     --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
     --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.06);
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
     --up: #0ca30c; --down: #e66767; --empty: #262624;
   }
 }
@@ -29,7 +29,7 @@
   color-scheme: dark;
   --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
   --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.06);
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
   --up: #0ca30c; --down: #e66767; --empty: #262624;
 }
 * { box-sizing: border-box; }
@@ -151,7 +151,7 @@ details li { margin: 4px 0; }
 <script>
 let DATA = /*__DATA__*/null;
 // The data, encrypted (AES-GCM, key from the password with PBKDF2), when the page is hosted. Null for the local copy.
-const ENC = {"iterations":600000,"salt":"4zbgGP5AbMH8LFg8sFi7nA==","iv":"JePriVyGjV0W6qdw","data":"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"};
+const ENC = {"iterations":600000,"salt":"w96qsif1XakO2p78DcpucQ==","iv":"JbjOvlSd1qmvy7ZU","data":"jgFV9eE6YQ8zVrr9RnZ3a1CQD3HqtHnD/yKdAFTl/wPTx4gSx8z/XRsLVUbKXljwGiee8auefmydN4ZP6uKfTFV4N4lfkFAf36e/LK+mRhyzqnuYBhXVApevvFraXdvY2SdBWAJQ2e0+FslK9SY3ZdxFdJXwfuVRIU1YKVWVgkO/lpwpq5lMfsDVwYG5LnTucYtfaVgcQw79qDKN+rL3EeY+WVwatdAaq9qPVXJ3mxadriZ6qXYg7KWuOQWNakrbHh1020Q+4K9czwIj9j3dHhTeJc+eajeGfGH34RAsfmIJnZiWflbhLdGzMVXN9p/ckSYi0spmG76YljJ5nw5sMGXKpkjMHczZnGrcX01cqeQO/3w6Rp//7IHTaCm4xqK63sOriZHUHYB3itIB0VzDQ1uM2kyCN22QPDe8BRF5kL6dljzQO3CTsrNv53R1QmCSWOJ8CEVXPahJbMvvIYJrQdrigwSfHqdnTd8mgUDogO2e6MF/7P/fyIaGEaG9rMrRmSjQSTiZkkwt/UNkuBC/3fOn6B5FPCCF2YoN/+U7DvlwG+7eUNzPisVg0ndF7gIzHX99Scu4oKnF81Y5QWfwbXHV5VrzKh7vWp+Pf4tV8alcDGw963osKUYGRdQLzVF9b57aRfgN++xSamxNy8UBpt3jAsMzhTWezBC8hJgQwqlQasX7jfCyj5qp2afa9bPKn028spLWdutTrA4WgMT34N4Ttt+lIoH3POSVL0UknI2mSeUb7DZlxPNBQW1/rs0lqxJqTmyl6MIRIh3Q+t8s0LyhRVtq0M4PHvlFE6dyIX7VoR7tMa7V+zlAj4LX3zjqqa6xpikSr6Ii/F/XBotT+DhApkgwI+PEjmwuU3/O18RdmpViJPapBSfho76dYH6ixcG5XP2bf5QfGZeETk88Wp5MMmzDAD9lUtEgZN3tp2l93CA4SAE7zwSRKjQ4LRk6wBmCRql10ds7/dLVYxiaHTyWWIrrT3zzOdkwgcurAGHTukd1uvKNWqnfTVpt5LL8Szxs4Open2fuHdjG9YJ0NUpEnIo/6AMXVzBSWOZjz/xe/o9OTu1HVJfkZEAyjjEtHrbqu6nOrsEJM7aZ4EnV/5GXQfBZKLvZa01km+jA+HCKdXyl9iHOkmP65O6CKoG0xcgU0Ypu8XLTLJvc0uCMcUnAnJ2diJAidz5oqUCpKEJCuWqQAZpJzsvDd1aCYDN6rM75xWjjYDAhLIv0/DF732kj6p2eLo+dA/Q7TJiW7wk51Sqlb1G/TsUtjQuHnlnN2VONJu7IX3Be/UG/Jp2NoJ5sY18RxsXDXNRHUeXbhTP7oagoNMbyaePhexaHA05SrGU8f9+oTQHRTiS0vjHhv+crN3ufofzRdc1yAjvyzU6bzvS3NS542bxEGqYJs2b34CRJPhu5jCUXH9LD9pEKjMwxOF/G+GL0altF8tdSh8BltOcrAkb1JyQIqmEmVfg/Ig2DdoP7smwrnPzqLKeivz1bFGfMuigUn7yog0YaioqrDCNRyNf8ne0WF6/dx1ZeQpy8xgGZ+z/ylQ2uRs4ebjs74o5i655DV6Txon00FRB/FnXhMxtYDjbhF7tprCq7P1n7/bUJAswlvTNoJYPjDcLwMjtUCIKdKiX64Fn0H/CV/ynQhnAzQYBkuPiaUPZCz6LtbP5m1rT9RoR4OT3sAF+5Hk7J/8cZZXUppZj9xIOQCUepG0W7CXeGS7obm2yJWjQDGCS1bN9OEuw+tIY7gLfR3ac2iboC692XwXhweUR0fqP6dMxUh7w4KaySIKkjDr8yJIQ8bThDf2bsM0QvKBvfjp0ZEwnGENmGTvHwVG5a9Ed3CC7UUAukujmZq42pm7JACffoCoLuY5vsFZ9pzRyKXwVyn/49cQ83xTX+MWZF/Bixyt5cu8FrKWg0t8bcNEns1BVgQaoukEVfiKOJtIB8EzLmWtO8z2r9mJiP6+Jpf+/PzbzRNenMBPpCR8yRsqWc71DIGDlniQ0EN9MVvrsNjBJrwYEbwaIKPFZdUfeqQRHzVoE6TYhEsOxoaGJVCtzkdtIAEkBq+tuz5hKViqtqVuMGntsIthQ6uzgr0wAq0as9gvjk0wmMW1k3uSUzZ0qzA376/pVcjcHkRWBVuhN5tLKEnXKX+Tp32abNhS1JSs9BJnh6g7rYeATNMr1GT41AsyWsSUFUy7c1wsnOpzQTkOSs+WkbCaiO+zmxG3wbBBCoYeWcnBprBnbQDCAgiHOBE6GqyvvKcUnDTlI96MjTzVGFTNeboYzbW/J8Lfd7hr9JCo6PTEECeD6tXRso0rhxoYvHSN/gNcuhQNtu5Wl2OLp3G4R+FfNIjAK76JAlmpLlatLYvQ32Y3AdoeqPtPmMHWGJoPhu2IyfzKvD+zDYl3RSWhO5aQCaGel6/3/9oTHyAUPY/j0FxQvO8fbwr6uwP0Fpto0avmKJ5RFDvax59Qh39op5Rwnti6Yq8K6SCe3uvJuFug9zbT90MffI2qa9yohr32KBZ1wzUJGi6klKvdGHNAWtEpclCfMDhiaIghnIgfNF34H7CKRmN00KtE0Y4vHGiKlt7H06k+C9C55Cd+suMnm8g71b2nrtbXwrIwva94YrFMeHtutcwixdO2SDMpB20SlDLpmeoXcXq7a3Bo7ka3eE8W7bc/PMkSwpxmsoSbV2IkQQtxrff5Q8AeVny0650docId4v50KNwND6CLwkL1N9rE3T3+HZ0URZ6Ehs4I3MEHFDk/gOqYb8BLPKQLUXGuCZrm85dnZvS/Hi9m/DVUKdud3OBF9pB5l7KpWOVKx8VFfUm2TUBhBOv7x6is8ALqvc3zLozg1jMjFDQL87BiprwOQP6T/BHFp1pd4BANaae3Ug/dd0h8O8STWr+zTUrdVxjqEIM677mH6dWjRt2skzqA8TCgMEEMTb+FRSH5PbTLRMX1o54TCYEe2xgNr2u6npuItj8pR6a7OHW4Bg0f5M7nYE0nvmk4i+jZBXWg+m7fMJO2MjhWuDrQn8tTAeALPBehG1JJxOZZnvF3gZ+HBc9Yznm2dqveDg3MOtupjXWO7UvkK4w80iyvzIncU7va5vmdwpxpXWbP4EZCqf+vH2bg5iVxzk+r/+cPNP/saWvnRcT9Il3P0WB6EgHovb5Y0Idwqv1BUEInte8lx75d0ZaofhW5WAVmji2Lg+w7sfNIVJKRftKkdZmRDOGE6EJBm1t+4m0lx/0NITREEvpq5ZAuSJ6UdLc2rnGWen6aUWGbO6aG/+PizMGcVhI/b6Ky782LV9QLr2X+YEyv96CK8t3nySdG/x/KR1p9w13XGjiM1W/6d8HebqKdBZAbaI/YVVFWfmmMw1Rsd5Zw3y/LN/J1YoJChPh7ly9ty1tFq+qPX6dxlRZmSWYG/aQQwIPOOeuioDgzVS83QHSCPWE9lBClJry/wOCFch8+3mJap56yNWMilmFHNn/XYFeBc/vDXJCN6aJvsuTMg8qobcTStYBQ8DQP6ZwiJ3roM89T+SgYnLgFayPO5aaOcYBtyc9P9pADAwr9yFgzacELyESe/RG8+gSdLmU5WUbJfgasx9yH9UVHExYBy0LiY39rafhkHyFvFbvGIcG1ZNkdcRlNYT22iwBsaTSZWHlSR8VO/CsvFsonxFirOLuzBcMKnOAaba/GPc4Wa6U/bfPxHURN9C2RMHLAtL7GQqWfFXihRwMWUuxA/f5To7HEkOqqrKnDZ3J32fDjbe39c0x5GZ7UvYUIzqyxmY83MAugsq+wRzqk7DcU1TKsLyeMeAWNBaP1gk2yDdWT1bihefDsIDgNjj2LbRaZ7ElCJC1+S4/KDNLIuce7rXmqKbWDMxhyF/xwD/TiIeF0Ml+BKN+yYGTFbtkeOdhsYegSw+TttQYuxAZtP9eR5uG93kRRdIGccUQk/ndoOx+tAEM497tapibxDX1xaedkh4ZDE4XIweEfj+HWKDCS/nmoY0XsbctnWJ+HenghxAar/UVtG7SXk3HobQZbW780jqdawX2FWIk8IvfPbH/fxgp/oP1cMLFJhPD6ARCUuQLsiDJ4pG4wJr8sgtGdsFte5GO/is9E6V8cw2dB5FdaCSaflfn2OgTdkCwldp1ubqM9qp//spv09RGAz/Dp0sCu5umqXqxUE//pkVwAjn5HirpJcPBwjguiEsBpxCWazAEGQl9ThFVkQBTCRZqtIrNnutFzN63a0snhyllN/W7LEWg6zxQLYUiJc7BXMqXYsx/WBfy51gCfAwR9z3yUuauR9lZrNuMb7vmUCoiMSQB+Z69s1b0WXXCUhJqLeqUf1IR/h78M+RjsW1AZvKvn0btH3ZGP6gOTlbFFTHh8qhB3BD5JJnRSJ3GNkulifhfHiw3n5pu2ED+VbT1FTccey31nPbABd923+0diP4XA1Vdz67CCY8RCei4ezUXFhDp1rmUdCLFdruTjnB9gXlV6HQBemGaPq5vob0CUPDIq5aFjbqoz9fn+cwVvFXxM/ake82y3uGltFO8CfzfSJKe1GSIlmrRLfwNFaSaxs1Gitr2WcyFFhF7r4zjpXyd4Mvu4f7kOh8zo6ktMC6S47gtih82hZO8LEPO34xygRCcthoUGFfUX/Pu8aF6gkBBfV6mG5E1EK5juDLmSJb/Ef+oZQ2vTHld87sYL4GjKHDAT0BkJOYg0P48bP85uB8CJkzIUxBgRaMwI/u6cTWBdwXvwfFhvg8IZ8doYRNncsrONOq8JLjATdHg9JbUcIq+tOxmXmouRS9Jaq+zMBKNlTZ5v1gqjUszpup75Trqwimo6jIcvmUWRB6KXByvyjp/5jYQJMMMAxM0e259YNXcSxO2QMNa9Rk34l/FlLVy97ukYY2WkUvFZGRca5aGw4rPCuw9mpqhWF0ajPA69RwFDmgGBkoMduKTzSNa0MziKwbLmnnLjQmHxarjv4ZpKGsCPzJgmJR44hbPyKh/PsURSzSyuGLGcC5+xwvtw+gDj1GpXRJQI8GboGRDBHNboXYwpKH0W0Dlg+521813TdWhYGiTMJB+WNPf0UwvX8l1LoEYVdheCliHPytO1XlPq+aEE1yrrgdMtMyNcMD60MPgNMDPO0HMZ0sLpWpGgLtvFFAfFdodUpJ1huALjAAq0Awkt3zt1bgs0rH8M1FWMbySFrEhLRG8brht4mCdPZ9VPcnEhGr4x4auWXaoMtCbb3DbQcEpM/qj6cfcavZIqyR0ks71lhgBVHwGdHspUUwERdLM2PGpygxLFeUzVfcvhnxXGS9PWtda5xP4qjxrWPsTYe7ZGivdrHAlfqQjbLawOxRgrts7TgvEjmGPFIf+f0tibrf7QqaAfBVj3w9G7UgiRZpYGFAN3mlWKAqnb/Ww4/FuRF6/gNRYpIUYxMS1EW68Eu/50gXU4D097q+SijVGyaE8bTlfsm/GiiMb7bytt+YxWztvh6Corg83vEVs99G7qRf3VJ7ABHOYoCjyYKMAXMHSb3+p4kaUx8vljJHQfUa7z+H5Kg6XALIZi7T9kbJ1ZK7/+hW+9jUPM2DNzMOqyio3W2bKRrO+acWx+1WFdUUUiacjIG/jeqD70OKfDt/fMj15rrOOseFUkNo9iPmgyIyOEI6zP1mP5zmaXgQ/jSUGqHInsVxsWA+tLIBR7cNE0PPwFFn4OTExVI+7kFmtOMvrAGVZT60oGLURqyF5AEkYj9QiYm2bKhNP9n5IaVVkX7+KpWogVx6DqOPex6ipWfSuOoYC0IfF60oIhO1jmIzfqcfTGS2my3NLly1K92aEnjX2wwLSndCnERSNESlGXLwarPQ2z6wwPdH0TEbpQBnTuePETgsg+jMpW5wIK/WxoeKpZ081rgATAcOjAUR7BBElwVqaL++7Zk+u6mcRHyefJAke47bjMVBIrO3pFlRyn0h2CG5JDGNQVnJkt7en2nzxEeRsfzns7a3XxadZy49m6Q2gkMP3KuOLF0atWa7jLY1qo1T1AYpWTVJDlj+9Ilw7GXFtbvJanKRdgwr6hGHI1bRQXVAcP+q9nARHRAaFWj/Fmm1gCRs7txsT2d7przfaj4d2vBFCzNsrLTwzPiTn2LzRQPDCFKFb8CxDws4atllCTX/DotVuRkyp1Uzw6AQavsx9lUK3+jnGbj0+RZEgBb4HG+CnZvg29wJzne/81oV3VK/kq1USuXLgoWbh3S5CA1aqxmCzo1gO+WvB3Pn+iYxiia7KfVVvcq7e3fXWK4MeOTYbJKvZBrx1KaOUtMqiqAtW+gzfbmzAd88rCAP38GlZV7lhcjotkZmAeW8BAS5Q/o3yrOHxaZ2smokDF92WShpqmRvb8KVhRcTC2z5NYyVKeXU/K+YMOVjmZptp9jLzWzc6WXIvXAmBememEmzJB+JPAWdjfyxzjvyGZCWsD2q5C+UWIZK8KaYr7Oh3tVGkiX7Fe8CyCoH+eZH/86wPAUlB9kTB0YkvdI6TVpr6nNt7U/Zb2PVeqoAdCHolJhRPLhmb+yownymla0ZWg/APYui72uBK3Q/OAEDmfsaLovas7zgXL7d3enbOt8oXNn0KMe3escDtY2FrSmlh7VxFGJAFv/3TOv5K1pTxFbTwlWp0gwaWaJ9daqJHn6UtokJroo3rYiS+nMPMAZsRiUBn97FR+thSiU7po4imXMeQUtcoG9Qa56bJqxd1Y7eKDJJBYzAOYoXxir6OMYELqaFLg8ALYW8skr8dXBtcTanCid5Tp359ML6utZZzCPFgRP6zXeGTJa+t38RRT57eM76RV4ONhEWGse/xGJPssvd7EE8/YI5ui4ahk/+fH6/kH3V/IKNux9zeqvGt2+x2/WGqFtgIi9SHOCMci7I6YaEI/IUkQIWho2v/3rH4L6CN0xRdBEwGNKuG/tj7HsLeF1qF6tNhRhvrWhT5ZQKQmWl1FebmulLcJ8yKQJ+973ibSkbjyuvjAu/1Fzur/8Qm/WzN6SJTui359YGHyOUp/WJB8LnwKPPb03EkLPlXvMf/IeRQe4ImvrRv3jOs1Qjiv5U1FXE46zEtDLsDUi9oQaUzsCo1dTL8e94w5jGPxZGl/mjpMnX3CI37/MKCZIlu3mR12wuPGCEBoScwAmkDr5U9NJt98JReqS9NP98KaqVr/oSYMNjzfz0lB7ogkxpiLET958txer2KcqJ1NY04PewPr2D2cjCTMxjaiaScyBwhp/n6SR2nFqgZHVx/G5i5ofUQmrSvb2qOxP3redE3nTDwlRucSksJfU9XDoxkHnW/xHQUo4jVvJD+/NwsE6QVATbY5yfQc35AMfTK3cyvGCwRDN3HQTFbPzufiLAExc4RPXOzijBuPDX8cibzrpRwHfYmaHVfLSwyxhfmmlP/Oek9GPY87Xxn7NrZ3S1Mu4/tCHyfYRa7ydOF+RD1754G3H37PasaOl/LeGy9INsqiQ9eHEiCC5bNs17oHushhpdngDfvPxswDj/rFoPaKE7SoepUy3NNvbk3VxJJeC8x4q/coeyZDjVKDjfaX2fjII1JJHN70AV44w6YRzVeSQ5oKREahUHTyPLZxk7OmpaqxfEkR6VF0hX8xHW+884dxHmlLVaPDJco25FcSlt9FKBo5BNCS0p4tyNuaPIdH4qDBk8EJ2E2YwtFrBeZaUnhSCsL4MzVOahlwxI21pYJW6cKUNM3ay1v/qZiTAWFsXsqUtJFtVTqttTC+X0WmrnJg=="};
 
 // MARK: State and controls
 
@@ -705,10 +705,29 @@ function gameSection() {
   const tally = key => { const t = new Map(); for (const r of inRange) for (const [k, n] of Object.entries(r[key] || {})) t.set(k, (t.get(k) || 0) + n); return [...t.entries()].sort((a, b) => b[1] - a[1]); };
   const kinds = tally('kinds'), styles = tally('styles');
   const allGames = sum(kinds.map(k => k[1]));
-  chartCard('Games by kind', `Finished games in the days shown, ${allGames} in all.`, {
-    labels: kinds.map(k => k[0]), series: [{ label: 'Games', data: kinds.map(k => k[1]), color: blue }],
-    stats: kinds.slice(0, 5).map(([k, n]) => `${k} ${pct(allGames ? n / allGames : null)}`).join(' · ') +
-      ` · by style: ${styles.map(([k, n]) => `${k} ${pct(allGames ? n / allGames : null)}`).join(', ')}`,
+  const playersWith = (key, value) => new Set(inRange.filter(r => (r[key] || {})[value]).map(r => r.p)).size;
+  const everyone = new Set(inRange.map(r => r.p)).size;
+  const modeCard = (title, subtitle, key, name = k => k) => {
+    const list = tally(key);
+    chartCard(title, subtitle, {
+      labels: list.length ? list.map(([k]) => name(k)) : ['none yet'], series: [
+        { label: 'Players', data: list.length ? list.map(([k]) => playersWith(key, k)) : [0], color: blue },
+        { label: 'Games', data: list.length ? list.map(([, g]) => g) : [0], color: orange },
+      ],
+      stats: list.map(([k, g]) => `${name(k)}: ${playersWith(key, k)} players (${pct(everyone ? playersWith(key, k) / everyone : null)}), ${g} games`).join(' · '),
+    });
+  };
+  modeCard('Players by style', `Normal, Competitive and Relax: players who finished at least one game in each (of ${everyone}), and the games.`, 'styles');
+  modeCard('Players by mode', 'Kind and style together, like classic Competitive or endless Relax.', 'modes');
+  modeCard('Multiplayer rooms by rule', 'Rooms created or joined, by their rule. Steal is counted below.', 'roomRules');
+  chartCard('Game modes', `Players who finished at least one game of each kind in the days shown (of ${everyone}), and the games.`, {
+    labels: kinds.map(k => k[0]), series: [
+      { label: 'Players', data: kinds.map(k => playersWith('kinds', k[0])), color: blue },
+      { label: 'Games', data: kinds.map(k => k[1]), color: orange },
+    ],
+    stats: ['styles', 'directions', 'boards'].map(key => `By ${key === 'styles' ? 'style' : key === 'directions' ? 'direction' : 'board'}: ` +
+      tally(key).slice(0, 6).map(([k, n]) => `${k} ${playersWith(key, k)} players, ${n} games`).join(' · ')).join('. ') +
+      `. Multiplayer: ${new Set(inRange.filter(r => r.stealGames).map(r => r.p)).size} played Steal, ${new Set(inRange.filter(r => r.roomsCreated || r.roomsJoined).map(r => r.p)).size} played in rooms.`,
   });
 
   // The first day.
@@ -716,7 +735,7 @@ function gameSection() {
   const later = new Set(rows.filter(r => r.day > r.firstDay).map(r => r.p));
   const steps = [
     ['Opened 49', firstRows.length],
-    ['Started the welcome', firstRows.filter(r => r.welcomeStep != null).length],
+    ['Saw the welcome', firstRows.filter(r => r.welcomeShown).length],
     ['Finished the welcome', firstRows.filter(r => r.welcomeFinished).length],
     ['Played a game', firstRows.filter(r => (r.games || 0) >= 1).length],
     ['Played 3 games', firstRows.filter(r => (r.games || 0) >= 3).length],
@@ -760,6 +779,105 @@ function gameSection() {
     for (const v of [name, fmt(total), fmt(inRange.length ? total / inRange.length : null, 2), `${who} of ${playersInRange}`]) tr.insertCell().textContent = v;
   }
   c.el.appendChild(t);
+  tutorialSection(rows, from);
+}
+
+// MARK: Tutorial
+
+const stageNames = {
+  'welcome.benefits': 'Welcome: why 49', 'welcome.goal': 'Welcome: goal', 'welcome.customize': 'Welcome: make it yours',
+  'welcome.tryIt': 'Welcome: try it', 'welcome.ready': 'Welcome: ready', 'lesson.first': 'In the first game',
+  'lesson.first.done': 'After the first game', 'lesson.competitive.intro': 'Competitive offer', 'lesson.competitive': 'In the Competitive game',
+  'lesson.competitive.done': 'After the Competitive game', 'lesson.fullBoard.intro': '7 × 7 offer', 'lesson.fullBoard': 'In the 7 × 7 game',
+  'lesson.fullBoard.done': 'After the 7 × 7 game', afterTutorial: 'After the tutorial, before a game', playing: 'Playing after the tutorial',
+};
+const stageName = s => s == null ? 'unknown' : s.startsWith('tour.') ? 'Menu tour' : stageNames[s] || s;
+const inTutorial = s => s != null && (s.startsWith('welcome.') || s.startsWith('lesson.'));
+
+// One player's tutorial, from all their days.
+function tutorials(rows) {
+  const by = new Map();
+  for (const r of [...rows].sort((a, b) => a.day < b.day ? -1 : 1)) {
+    if (!by.has(r.p)) by.set(r.p, { p: r.p, days: [], shown: false, shownDay: null, steps: new Set(), skipped: new Set(), finished: false, lessons: {}, ended: null, endedDay: null, after: 0, tour: false, stops: new Set(), tourDone: null });
+    const t = by.get(r.p);
+    t.days.push(r);
+    if (r.welcomeShown && !t.shown) { t.shown = true; t.shownDay = r.day; }
+    (r.welcomeSteps || []).forEach(s => t.steps.add(s));
+    (r.welcomeSkipped || []).forEach(s => t.skipped.add(s));
+    if (r.welcomeFinished) t.finished = true;
+    for (const [l, events] of Object.entries(r.lessons || {})) t.lessons[l] = [...new Set([...(t.lessons[l] || []), ...events])];
+    if (r.tutorialEnded && !t.ended) { t.ended = r.tutorialEnded; t.endedDay = r.day; }
+    if (t.ended) t.after += r.day === t.endedDay ? (r.gamesAfterTutorial || 0) : (r.games || 0) - (r.coachedGames || 0);
+    if (r.tourStarted) t.tour = true;
+    (r.tourStops || []).forEach(s => t.stops.add(s));
+    if (r.tourFinished) t.tourDone = 'finished'; else if (r.tourSkipped && !t.tourDone) t.tourDone = 'skipped';
+  }
+  for (const t of by.values()) {
+    const last = t.days[t.days.length - 1];
+    t.lastClose = last.lastClosedAt;
+    t.cameBack = t.days.some(d => t.shownDay && d.day > t.shownDay);
+    t.tutorialCloses = t.days.filter(d => !t.shownDay || d.day === t.shownDay).flatMap(d => Object.entries(d.closes || {})).filter(([s]) => inTutorial(s)).reduce((n, [, c]) => n + c, 0);
+  }
+  return [...by.values()].filter(t => t.shown);
+}
+
+function tutorialSection(rows, from) {
+  const title = document.createElement('h2'); title.className = 'section-title'; title.textContent = 'Tutorial';
+  document.getElementById('cards').appendChild(title);
+  const all = tutorials(rows).filter(t => t.shownDay >= from);
+  if (!all.length) { card('No tutorials yet', 'New players who see the welcome on build 38 or later appear here.', { wide: true }); return; }
+  const n = all.length, blue = css('--s1'), orange = css('--s2'), aqua = css('--s3'), yellow = css('--s4'), magenta = css('--s5');
+  const share = x => pct(n ? x / n : null);
+
+  // The welcome, step by step.
+  const welcome = [['Saw the welcome', n], ['Goal', all.filter(t => t.steps.has('goal')).length], ['Make it yours', all.filter(t => t.steps.has('customize')).length],
+                   ['Try it', all.filter(t => t.steps.has('tryIt')).length], ['Ready', all.filter(t => t.steps.has('ready')).length], ['Finished the welcome', all.filter(t => t.finished).length]];
+  chartCard('Welcome, step by step', `New players in the days shown (${n}): how many reached each step.`, {
+    labels: welcome.map(w => w[0]), series: [{ label: 'Players', data: welcome.map(w => w[1]), color: blue }],
+    stats: welcome.slice(1).map(([s, c]) => `${s} ${share(c)}`).join(' · ') + `. Skipped "try it": ${all.filter(t => t.skipped.has('tryIt')).length}.`,
+  });
+
+  // The tutorial games.
+  const lessons = [['first', 'First game'], ['competitive', 'Competitive'], ['fullBoard', '7 × 7']];
+  const events = [['offered', 'Offered', blue], ['started', 'Started', orange], ['finished', 'Finished', aqua], ['skipped', 'Skipped', yellow], ['left', 'Left mid-game', magenta]];
+  const count = (l, e) => all.filter(t => (t.lessons[l] || []).includes(e) || (e === 'offered' && l === 'first' && (t.lessons.first || []).includes('started'))).length;
+  chartCard('Tutorial games', 'Each of the three tutorial games: how many players were offered it, started, finished, skipped or left it. The first game is offered by the welcome itself.', {
+    labels: lessons.map(l => l[1]), series: events.map(([e, label, color]) => ({ label, data: lessons.map(([l]) => count(l, e)), color })),
+    stats: lessons.map(([l, name]) => { const s = count(l, 'started'); return `${name}: ${s ? pct(count(l, 'finished') / s) : '–'} of starters finished`; }).join(' · '),
+  });
+
+  // After the tutorial.
+  const ended = all.filter(t => t.ended);
+  const how = (() => { const m = new Map(); for (const t of ended) m.set(t.ended, (m.get(t.ended) || 0) + 1); return [...m.entries()].sort((a, b) => b[1] - a[1]); })();
+  const howNames = { finished: 'Finished it all', skippedCompetitive: 'Skipped Competitive', skippedFullBoard: 'Skipped 7 × 7', warmUp: 'Warm-up instead', fromWelcome: 'Left from the welcome' };
+  const after = [['Ended the tutorial', ended.length], ['Then played a game', ended.filter(t => t.after >= 1).length], ['Played 3 or more', ended.filter(t => t.after >= 3).length],
+                 ['Played 10 or more', ended.filter(t => t.after >= 10).length], ['Came back another day', ended.filter(t => t.cameBack).length]];
+  chartCard('After the tutorial', `Of the ${ended.length} who got to the end of the tutorial: ordinary games played after it, and coming back.`, {
+    labels: after.map(a => a[0]), series: [{ label: 'Players', data: after.map(a => a[1]), color: blue }],
+    stats: after.slice(1).map(([s, c]) => `${s.toLowerCase()} ${pct(ended.length ? c / ended.length : null)}`).join(' · ') +
+      `. Games after it: mean ${fmt(mean(ended.map(t => t.after)), 1)}, median ${fmt(median(ended.map(t => t.after)), 1)}. How it ended: ` +
+      how.map(([k, c]) => `${howNames[k] || k} ${c}`).join(', ') + '.',
+  });
+
+  // Where 49 was closed.
+  const neverBack = all.filter(t => !t.cameBack);
+  const closes = (() => { const m = new Map(); for (const t of neverBack) { const k = stageName(t.lastClose); m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); })();
+  const duringTutorial = neverBack.filter(t => inTutorial(t.lastClose)).length;
+  const rightAfter = neverBack.filter(t => t.lastClose === 'afterTutorial').length;
+  chartCard('Where new players closed 49 for good', `The ${neverBack.length} new players who didn't come back on another day: where they were when they last left.`, {
+    labels: closes.map(x => x[0]), series: [{ label: 'Players', data: closes.map(x => x[1]), color: blue }],
+    stats: `${duringTutorial} left during the tutorial, ${rightAfter} right after it without a game, ${neverBack.filter(t => t.lastClose === 'playing').length} after playing. ` +
+      `${all.filter(t => t.tutorialCloses).length} of ${n} closed 49 at least once during the tutorial on their first day (some came back to it).`,
+    wide: true,
+  });
+
+  // The menu tour.
+  const order = ['daily', 'style', 'board', 'modes', 'progress', 'social', 'streak', 'topBar'];
+  const toured = all.filter(t => t.tour);
+  chartCard('Menu tour', `New players who saw the menu tour (${toured.length}): how many reached each stop.`, {
+    labels: [...order, 'finished'], series: [{ label: 'Players', data: [...order.map(s => toured.filter(t => t.stops.has(s)).length), toured.filter(t => t.tourDone === 'finished').length], color: blue }],
+    stats: `${toured.filter(t => t.tourDone === 'finished').length} finished it, ${toured.filter(t => t.tourDone === 'skipped').length} skipped it.`,
+  });
 }
 
 function gameSummary() {
@@ -771,6 +889,12 @@ function gameSummary() {
   if (firsts.length >= 3) {
     const finished = firsts.filter(r => r.welcomeFinished).length, played = firsts.filter(r => (r.games || 0) >= 1).length, back = firsts.filter(r => later.has(r.p)).length;
     out.push(['On their first day', ` (${firsts.length} new players in the game stats): ${pct(finished / firsts.length)} finished the welcome, ${pct(played / firsts.length)} finished a game, ${pct(back / firsts.length)} came back another day.`]);
+  }
+  const tut = tutorials(rows);
+  if (tut.length >= 3) {
+    const ended = tut.filter(t => t.ended), neverBack = tut.filter(t => !t.cameBack);
+    out.push(['The tutorial', ` (${tut.length} new players): ${pct(tut.filter(t => t.finished).length / tut.length)} finished the welcome, ${pct(ended.length / tut.length)} reached the end of the tutorial, ` +
+      `${pct(ended.length ? ended.filter(t => t.after >= 1).length / ended.length : null)} of those played a game after it. Of those who never came back, ${neverBack.filter(t => inTutorial(t.lastClose)).length} left during the tutorial and ${neverBack.filter(t => t.lastClose === 'afterTutorial').length} right after it.`]);
   }
   const daily = rows.filter(r => r.dailyGames).length / rows.length;
   out.push(['The Daily', ` is played on ${pct(daily)} of player-days. A typical player-day is ${fmt(median(rows.map(r => r.games || 0)), 1)} games and ${fmt(median(rows.map(r => (r.seconds || 0) / 60)), 1)} minutes.`]);
