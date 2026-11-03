@@ -1,1 +1,662 @@
-<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>49 Players</title><p>Not published yet.</p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>49 Players</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10); --wash: rgba(11,11,11,0.05);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --up: #006300; --down: #d03b3b;
+  --q100: #cde2fb; --q200: #9ec5f4; --q300: #6da7ec; --q400: #3987e5; --q500: #256abf; --q600: #184f95; --q700: #0d366b;
+  --empty: #f0efec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.06);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --up: #0ca30c; --down: #e66767; --empty: #262624;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.06);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --up: #0ca30c; --down: #e66767; --empty: #262624;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+h2 { font-size: 15px; margin: 0; }
+p { margin: 0; }
+.sub { color: var(--ink-2); }
+.small { font-size: 12px; color: var(--muted); }
+.note { margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: var(--wash); color: var(--ink-2); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; margin: 20px 0 16px; padding: 12px 0; border-bottom: 1px solid var(--grid); background: var(--page); z-index: 5; }
+@media (min-width: 900px) { .filters { position: sticky; top: 0; } }
+.filter { display: flex; flex-direction: column; gap: 4px; }
+.filter > span { font-size: 12px; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--ring); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 5px 10px; border: 0; background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--ring); }
+.seg button:hover { background: var(--wash); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); font-weight: 600; }
+.check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); padding: 5px 0; cursor: pointer; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 12px 14px; }
+.tile .label { font-size: 12px; color: var(--ink-2); }
+.tile .value { font-size: 26px; font-weight: 650; margin: 2px 0; }
+.tile .delta { font-size: 12px; color: var(--muted); }
+.tile .delta b.up { color: var(--up); } .tile .delta b.down { color: var(--down); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 14px 16px 12px; min-width: 0; }
+.card.wide { grid-column: 1 / -1; }
+.card header { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 8px; }
+.card header p { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+.card .chart { position: relative; height: 240px; }
+.card .stats { font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+.toggle { font: inherit; font-size: 12px; border: 1px solid var(--ring); background: transparent; color: var(--ink-2); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+.toggle:hover { background: var(--wash); }
+table { border-collapse: collapse; width: 100%; font-size: 12px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--grid); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; }
+.tablewrap { max-height: 260px; overflow-y: auto; }
+
+.heat { display: grid; gap: 2px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.heat div { padding: 5px 2px; text-align: center; border-radius: 4px; min-width: 0; overflow: hidden; }
+.heat .h { color: var(--muted); background: transparent; }
+.heat .row { text-align: left; color: var(--ink-2); background: transparent; white-space: nowrap; }
+.heat .cell { cursor: default; outline-offset: -2px; }
+.heat .cell:hover, .heat .cell:focus { outline: 2px solid var(--ink); }
+.heat .none { background: transparent; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+.legend i { display: inline-block; width: 14px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--ring); border-radius: 8px; padding: 6px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.15); display: none; z-index: 10; }
+#tip b { font-size: 13px; }
+#lock { max-width: 420px; margin: 18vh auto 0; padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+#lock[hidden] { display: none; }
+#lock input[type=password] { font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--axis); background: var(--surface); color: var(--ink); }
+#lock button { font: inherit; font-weight: 600; padding: 10px 12px; border-radius: 8px; border: 0; background: var(--ink); color: var(--surface); cursor: pointer; }
+#lock button:disabled { opacity: .6; cursor: default; }
+details { margin-top: 24px; color: var(--ink-2); }
+details summary { cursor: pointer; color: var(--ink); font-weight: 600; }
+details li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<form id="lock" hidden autocomplete="on">
+  <h1>49 players</h1>
+  <p class="sub">This dashboard is encrypted. Enter the password to open it.</p>
+  <input type="text" name="username" value="49 dashboard" autocomplete="username" hidden>
+  <input id="lock-password" type="password" autocomplete="current-password" aria-label="Password" placeholder="Password" required>
+  <label class="check"><input type="checkbox" id="lock-remember"> Remember on this device</label>
+  <button type="submit" id="lock-open">Open</button>
+  <p class="note" id="lock-error" hidden></p>
+</form>
+<main id="dashboard">
+  <h1>49 players</h1>
+  <p class="sub" id="updated"></p>
+  <div id="notes"></div>
+
+  <div class="filters" role="group" aria-label="Filters">
+    <div class="filter"><span>Days shown</span><div class="seg" id="f-range"></div></div>
+    <div class="filter"><span>Moving average</span><div class="seg" id="f-ma"></div></div>
+    <div class="filter"><span>Gone after not playing for</span><div class="seg" id="f-gone"></div></div>
+    <div class="filter"><span>Retention</span><div class="seg" id="f-ret"></div></div>
+    <div class="filter"><span>Team</span><label class="check"><input type="checkbox" id="f-team"> Include team testers (you)</label></div>
+    <div class="filter"><span>Theme</span><div class="seg" id="f-theme"></div></div>
+  </div>
+
+  <section class="tiles" id="tiles" aria-label="Key numbers"></section>
+  <section class="grid" id="cards"></section>
+
+  <details>
+    <summary>How these are counted</summary>
+    <ul>
+      <li><b>A day</b> is the time from one daily check to the next (the stats job runs every morning), shown with the check's date. The last day, marked "so far", is from the last morning check until now.</li>
+      <li><b>Active player:</b> a tester who opened 49 at least once that day, from Apple's TestFlight session counts. Apple's counts can arrive a day late, so recent days may rise later.</li>
+      <li><b>WAU / MAU:</b> different players active in the last 7 / 30 days. <b>Stickiness</b> is daily players ÷ weekly players: how many days of the week a typical player comes back (100% = every day).</li>
+      <li><b>New</b> players are active for the first time since tracking began; <b>returning</b> were active the day before too; <b>back</b> were away and came back; <b>left</b> were active the day before but not that day.</li>
+      <li><b>Churn rate:</b> of everyone who has ever played, the share who haven't played for the chosen number of days. Players from before tracking began who never played since count from the first check.</li>
+      <li><b>Retention, classic:</b> of the players who started on a day, the share who played again exactly N days later. <b>Rolling:</b> the share who played N or more days later (steadier with few players).</li>
+      <li><b>Moving average:</b> the mean of the last N days, including that day. <b>Trend:</b> the least-squares slope, change per day. <b>Std dev:</b> how much a day usually varies from the mean.</li>
+      <li>Crashes and installs come per build, so they always include the team.</li>
+    </ul>
+  </details>
+</main>
+<div id="tip" role="status"></div>
+
+<script>
+let DATA = /*__DATA__*/null;
+// The data, encrypted (AES-GCM, key from the password with PBKDF2), when the page is hosted. Null for the local copy.
+const ENC = {"iterations":600000,"salt":"oERgHsYu4c8L0qJoCnr8uA==","iv":"V25M3ZQ9DlAfLeYS","data":"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"};
+
+// MARK: State and controls
+
+const state = { range: 14, ma: 7, gone: 7, ret: 'rolling', team: false, theme: 'auto' };
+try { Object.assign(state, JSON.parse(localStorage.getItem('dash49') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('dash49', JSON.stringify(state)); } catch (e) {} };
+
+function segmented(id, key, options) {
+  const el = document.getElementById(id);
+  el.textContent = '';
+  for (const [value, label] of options) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = label;
+    b.setAttribute('aria-pressed', String(state[key] === value));
+    b.onclick = () => { state[key] = value; save(); controls(); render(); };
+    el.appendChild(b);
+  }
+}
+function controls() {
+  segmented('f-range', 'range', [[7, '7 days'], [14, '14 days'], [30, '30 days'], [0, 'All']]);
+  segmented('f-ma', 'ma', [[3, '3 days'], [7, '7 days']]);
+  segmented('f-gone', 'gone', [[3, '3 days'], [7, '7 days'], [14, '14 days']]);
+  segmented('f-ret', 'ret', [['rolling', 'Rolling'], ['classic', 'Classic']]);
+  segmented('f-theme', 'theme', [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']]);
+  const team = document.getElementById('f-team');
+  team.checked = state.team;
+  team.onchange = () => { state.team = team.checked; save(); render(); };
+  if (state.theme === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', state.theme);
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => render());
+
+// MARK: Statistics helpers
+
+const sum = a => a.reduce((s, x) => s + x, 0);
+const clean = a => a.filter(x => x != null && !Number.isNaN(x));
+const mean = a => { a = clean(a); return a.length ? sum(a) / a.length : null; };
+const median = a => { a = clean(a).sort((x, y) => x - y); if (!a.length) return null; const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; };
+const quantile = (a, q) => { a = clean(a).sort((x, y) => x - y); if (!a.length) return null; const p = (a.length - 1) * q, lo = Math.floor(p); return a[lo] + (a[Math.ceil(p)] - a[lo]) * (p - lo); };
+const sd = a => { a = clean(a); if (a.length < 2) return null; const m = mean(a); return Math.sqrt(sum(a.map(x => (x - m) ** 2)) / (a.length - 1)); };
+const slope = a => { const pts = a.map((y, x) => [x, y]).filter(p => p[1] != null); if (pts.length < 2) return null; const mx = mean(pts.map(p => p[0])), my = mean(pts.map(p => p[1])); const d = sum(pts.map(p => (p[0] - mx) ** 2)); return d ? sum(pts.map(p => (p[0] - mx) * (p[1] - my))) / d : null; };
+const lowest = a => { a = clean(a); return a.length ? Math.min(...a) : null; };
+const highest = a => { a = clean(a); return a.length ? Math.max(...a) : null; };
+const movingAverage = (a, n) => a.map((_, i) => i + 1 < Math.min(n, 2) ? null : mean(a.slice(Math.max(0, i - n + 1), i + 1)));
+const fmt = (x, d = 0) => x == null ? '–' : Number(x).toLocaleString('en', { maximumFractionDigits: d, minimumFractionDigits: d });
+const pct = (x, d = 0) => x == null ? '–' : fmt(x * 100, d) + '%';
+const dayLabel = iv => { const [y, m, d] = iv.date.split('-').map(Number); const s = new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }); return iv.partial ? s + ' (so far)' : s; };
+
+// MARK: The model: who played which day
+
+function model() {
+  const team = new Set(DATA.team);
+  const keep = t => state.team || !team.has(t);
+  const ivs = DATA.intervals;
+  const days = ivs.map(iv => {
+    const act = new Map();
+    for (const [t, n] of Object.entries(iv.deltas)) if (keep(+t)) act.set(+t, n);
+    return { iv, act };
+  });
+  const before = new Set(DATA.before.filter(keep));
+  const first = new Map();     // tester -> first day index played (-1: before tracking)
+  for (const t of before) first.set(t, -1);
+  days.forEach((d, i) => { for (const t of d.act.keys()) if (!first.has(t)) first.set(t, i); });
+  const n = days.length;
+  const dau = days.map(d => d.act.size);
+  const sessions = days.map(d => sum([...d.act.values()]));
+  const unique = (i, w) => { const s = new Set(); for (let j = Math.max(0, i - w + 1); j <= i; j++) for (const t of days[j].act.keys()) s.add(t); return s.size; };
+  const wau = days.map((_, i) => unique(i, 7));
+  const mau = days.map((_, i) => unique(i, 30));
+  const stick = days.map((_, i) => wau[i] ? dau[i] / wau[i] : null);
+  const perActiveMean = days.map(d => d.act.size ? mean([...d.act.values()]) : null);
+  const perActiveMedian = days.map(d => d.act.size ? median([...d.act.values()]) : null);
+  // Player flow.
+  const flow = days.map((d, i) => {
+    if (i === 0) return null;
+    const prev = days[i - 1].act;
+    let fresh = 0, returning = 0, back = 0, left = 0;
+    for (const t of d.act.keys()) {
+      if (first.get(t) === i) fresh++;
+      else if (prev.has(t)) returning++;
+      else back++;
+    }
+    for (const t of prev.keys()) if (!d.act.has(t)) left++;
+    return { fresh, returning, back, left };
+  });
+  // Last day played up to each day, for churn.
+  const last = new Map();
+  for (const t of before) last.set(t, -1);
+  const churn = [], pool = [], goneCount = [];
+  const since = [];   // days since last played, on each day
+  days.forEach((d, i) => {
+    for (const t of d.act.keys()) last.set(t, i);
+    const everyone = [...last.entries()];
+    const gone = everyone.filter(([, l]) => i - l >= state.gone).length;
+    pool.push(everyone.length); goneCount.push(gone);
+    churn.push(everyone.length ? gone / everyone.length : null);
+    since.push(everyone.map(([, l]) => i - l));
+  });
+  // Retention by the day a player started (players from before tracking have no start day).
+  const full = days.map(d => !d.iv.partial);
+  const cohorts = [];
+  days.forEach((d, c) => {
+    if (!full[c]) return;
+    const members = [...first.entries()].filter(([, f]) => f === c).map(([t]) => t);
+    if (!members.length) return;
+    const cells = [];
+    for (let k = 0; c + k < n && full[c + k]; k++) {
+      const share = members.filter(t => state.ret === 'classic'
+        ? days[c + k].act.has(t)
+        : days.slice(c + k).some((dd, j) => full[c + k + j] && dd.act.has(t))).length / members.length;
+      cells.push(share);
+    }
+    cohorts.push({ day: c, size: members.length, cells });
+  });
+  const maxK = Math.max(0, ...cohorts.map(c => c.cells.length));
+  const curve = [];
+  for (let k = 0; k < maxK; k++) {
+    const rows = cohorts.filter(c => c.cells.length > k);
+    const weight = sum(rows.map(r => r.size));
+    curve.push({ k, value: weight ? sum(rows.map(r => r.cells[k] * r.size)) / weight : null, players: weight, cohorts: rows.length });
+  }
+  const fresh = days.map((_, i) => [...first.values()].filter(f => f === i).length);
+  return { days, n, dau, sessions, wau, mau, stick, perActiveMean, perActiveMedian, flow, churn, pool, goneCount, since,
+           cohorts, curve, fresh, first, before, full };
+}
+
+// MARK: Charts
+
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const charts = [];
+const crosshair = {
+  id: 'crosshair',
+  afterDatasetsDraw(chart) {
+    const a = chart.tooltip && chart.tooltip.getActiveElements();
+    if (!a || !a.length) return;
+    const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = css('--axis'); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+  },
+};
+
+function card(title, subtitle, { wide = false } = {}) {
+  const el = document.createElement('article');
+  el.className = 'card' + (wide ? ' wide' : '');
+  const header = document.createElement('header');
+  const text = document.createElement('div');
+  const h = document.createElement('h2'); h.textContent = title; text.appendChild(h);
+  if (subtitle) { const p = document.createElement('p'); p.textContent = subtitle; text.appendChild(p); }
+  header.appendChild(text);
+  el.appendChild(header);
+  document.getElementById('cards').appendChild(el);
+  return { el, header };
+}
+
+function tableToggle(c, columns, rows) {
+  const b = document.createElement('button');
+  b.className = 'toggle'; b.type = 'button'; b.textContent = 'Table';
+  const wrap = document.createElement('div'); wrap.className = 'tablewrap'; wrap.hidden = true;
+  const t = document.createElement('table');
+  const head = t.insertRow(); for (const col of columns) { const th = document.createElement('th'); th.textContent = col; head.appendChild(th); }
+  for (const r of rows) { const tr = t.insertRow(); for (const v of r) tr.insertCell().textContent = v; }
+  wrap.appendChild(t);
+  b.onclick = () => { wrap.hidden = !wrap.hidden; b.textContent = wrap.hidden ? 'Table' : 'Chart'; c.el.querySelectorAll('.chart, .heat, .legend').forEach(x => x.hidden = !wrap.hidden); };
+  c.header.appendChild(b);
+  c.el.appendChild(wrap);
+}
+
+function chartCard(title, subtitle, { labels, series, stacked = false, percent = false, digits = 0, wide = false, stats = null, beginAtZero = true }) {
+  const c = card(title, subtitle, { wide });
+  const box = document.createElement('div'); box.className = 'chart';
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', title);
+  box.appendChild(canvas); c.el.appendChild(box);
+  if (stats) { const s = document.createElement('p'); s.className = 'stats'; s.textContent = stats; c.el.appendChild(s); }
+  const show = v => v == null ? '–' : percent ? pct(v, 1) : fmt(v, digits);
+  tableToggle(c, ['Day', ...series.map(s => s.label)], labels.map((l, i) => [l, ...series.map(s => show(s.data[i]))]));
+  const ink2 = css('--ink-2'), muted = css('--muted'), grid = css('--grid'), surface = css('--surface');
+  const datasets = series.map(s => s.type === 'line' ? {
+    type: 'line', label: s.label, data: s.data, borderColor: s.color, backgroundColor: s.color, borderWidth: 2,
+    borderDash: s.dash || [], pointRadius: labels.length > 20 ? 0 : 3, pointHoverRadius: 5, pointBackgroundColor: s.color,
+    pointBorderColor: surface, pointBorderWidth: 2, tension: 0.25, spanGaps: true, order: 0,
+  } : {
+    type: 'bar', label: s.label, data: s.data, backgroundColor: s.color, borderRadius: 4, borderSkipped: false,
+    borderColor: surface, borderWidth: stacked ? 1 : 0, maxBarThickness: 28, categoryPercentage: 0.8, barPercentage: 0.9,
+    stack: stacked ? 'all' : undefined, order: 1,
+  });
+  charts.push(new Chart(canvas, {
+    data: { labels, datasets },
+    plugins: [crosshair],
+    options: {
+      maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: series.length > 1, position: 'bottom', align: 'start',
+                  labels: { sort: (a, b) => a.datasetIndex - b.datasetIndex, color: ink2, boxWidth: 14, boxHeight: 10, usePointStyle: false, font: { size: 12 } } },
+        tooltip: {
+          backgroundColor: surface, titleColor: css('--ink'), bodyColor: css('--ink'), borderColor: css('--ring'), borderWidth: 1,
+          padding: 10, boxWidth: 12, boxHeight: 2, usePointStyle: false,
+          callbacks: { label: ctx => ` ${show(ctx.raw)}  ${ctx.dataset.label}` },
+        },
+      },
+      scales: {
+        x: { stacked, grid: { display: false }, border: { color: css('--axis') }, ticks: { color: muted, maxRotation: 0, autoSkipPadding: 12, font: { size: 11 } } },
+        y: { stacked, beginAtZero, grid: { color: grid }, border: { display: false },
+             ticks: { color: muted, precision: percent ? undefined : 0, font: { size: 11 }, callback: v => percent ? pct(v) : fmt(v, digits) },
+             suggestedMax: percent ? 1 : undefined },
+      },
+    },
+  }));
+  return c;
+}
+
+function seriesStats(values, unit = '', digits = 1, percent = false) {
+  const show = v => v == null ? '–' : percent ? pct(v, 1) : fmt(v, digits) + unit;
+  const s = slope(values);
+  return `Mean ${show(mean(values))} · median ${show(median(values))} · std dev ${show(sd(values))} · min ${show(lowest(values))} · max ${show(highest(values))} · trend ${s == null ? '–' : (s >= 0 ? '+' : '') + (percent ? pct(s, 1) : fmt(s, 2) + unit)} a day`;
+}
+
+// MARK: Render
+
+function tile(label, value, detail, change) {
+  const el = document.createElement('div'); el.className = 'tile';
+  const l = document.createElement('div'); l.className = 'label'; l.textContent = label;
+  const v = document.createElement('div'); v.className = 'value'; v.textContent = value;
+  const d = document.createElement('div'); d.className = 'delta';
+  if (change != null && Number.isFinite(change.value)) {
+    const b = document.createElement('b');
+    const good = change.lowerIsBetter ? change.value < 0 : change.value > 0;
+    b.className = change.value === 0 ? '' : good ? 'up' : 'down';
+    b.textContent = (change.value > 0 ? '▲ ' : change.value < 0 ? '▼ ' : '') + change.text;
+    d.appendChild(b); d.appendChild(document.createTextNode(' '));
+  }
+  d.appendChild(document.createTextNode(detail));
+  el.append(l, v, d);
+  document.getElementById('tiles').appendChild(el);
+}
+
+function render() {
+  for (const c of charts.splice(0)) c.destroy();
+  document.getElementById('tiles').textContent = '';
+  document.getElementById('cards').textContent = '';
+  const m = model();
+  const start = state.range ? Math.max(0, m.n - state.range) : 0;
+  const idx = [...Array(m.n).keys()].slice(start);
+  const pick = a => idx.map(i => a[i]);
+  const labels = idx.map(i => dayLabel(m.days[i].iv));
+  const fullIdx = idx.filter(i => m.full[i]);
+  const lastFull = fullIdx.length ? fullIdx[fullIdx.length - 1] : idx[idx.length - 1];
+  const pickFull = a => fullIdx.map(i => a[i]);
+  const half = list => { const h = Math.floor(list.length / 2); return [list.slice(0, h), list.slice(h)]; };
+
+  // Tiles.
+  const dauFull = pickFull(m.dau);
+  const [early, late] = half(dauFull);
+  const change = (now, then, lowerIsBetter = false) => then ? { value: now - then, text: pct((now - then) / then), lowerIsBetter } : null;
+  tile('Players, last full day', fmt(m.dau[lastFull]), `vs ${fmt(mean(dauFull), 1)} a day on average`, change(m.dau[lastFull], mean(dauFull)));
+  tile('Players a day, average', fmt(mean(dauFull), 1), `median ${fmt(median(dauFull), 1)}, second half vs first`, change(mean(late), mean(early)));
+  tile('Weekly players (WAU)', fmt(m.wau[lastFull]), `different players in 7 days, MAU ${fmt(m.mau[lastFull])}`);
+  tile('Stickiness', pct(mean(pickFull(m.stick))), 'daily ÷ weekly players, average');
+  tile('Churn rate', pct(m.churn[lastFull]), `${m.goneCount[lastFull]} of ${m.pool[lastFull]} not back in ${state.gone} days`, change(m.churn[lastFull], m.churn[fullIdx[0]], true));
+  const d1 = m.curve[1], d7 = m.curve[7];
+  tile('Retention, day 1', pct(d1 && d1.value), d1 ? `${state.ret}, ${d1.players} players` : 'needs 2 days');
+  tile('Retention, day 7', pct(d7 && d7.value), d7 ? `${state.ret}, ${d7.players} players` : 'needs 8 days of data');
+  const perPlayer = new Map();
+  for (const i of idx) for (const [t, n] of m.days[i].act) perPlayer.set(t, (perPlayer.get(t) || 0) + n);
+  tile('New players', fmt(sum(pick(m.fresh))), `in the days shown, ${fmt(m.first.size)} ever`);
+  tile('Sessions a day', fmt(mean(pickFull(m.sessions)), 1), `median ${fmt(median(pickFull(m.sessions)), 1)} over full days`);
+
+  // Daily players.
+  const blue = css('--s1'), orange = css('--s2'), aqua = css('--s3'), yellow = css('--s4');
+  chartCard('Daily active players', `Players who opened 49 that day, with the ${state.ma}-day moving average.`, {
+    labels, series: [
+      { label: 'Players', data: pick(m.dau), color: blue },
+      { label: `${state.ma}-day average`, data: pick(movingAverage(m.dau, state.ma)), color: orange, type: 'line' },
+    ], stats: seriesStats(pickFull(m.dau), '', 1),
+  });
+  chartCard('Sessions per day', `Times 49 was opened, with the ${state.ma}-day moving average.`, {
+    labels, series: [
+      { label: 'Sessions', data: pick(m.sessions), color: blue },
+      { label: `${state.ma}-day average`, data: pick(movingAverage(m.sessions, state.ma)), color: orange, type: 'line' },
+    ], stats: seriesStats(pickFull(m.sessions), '', 1),
+  });
+  chartCard('Players over 7 and 30 days', 'Different players in the 7 (WAU) and 30 (MAU) days up to each day. Before a full window of data, it covers the days there are.', {
+    labels, series: [
+      { label: 'Last 7 days (WAU)', data: pick(m.wau), color: blue, type: 'line' },
+      { label: 'Last 30 days (MAU)', data: pick(m.mau), color: orange, type: 'line', dash: [5, 4] },
+    ],
+  });
+  chartCard('Stickiness', 'Daily players ÷ players in the last 7 days. Higher means players come back on more days of the week.', {
+    labels, percent: true, series: [{ label: 'Stickiness', data: pick(m.stick), color: blue, type: 'line' }],
+    stats: seriesStats(pickFull(m.stick), '', 1, true),
+  });
+  const flow = idx.map(i => m.flow[i]);
+  chartCard('Player flow', 'Each day\'s players: new, returning from the day before, or back after a break. Below zero: players who played the day before but not that day.', {
+    labels, stacked: true, wide: true, series: [
+      { label: 'Returning', data: flow.map(f => f && f.returning), color: blue },
+      { label: 'New', data: flow.map(f => f && f.fresh), color: orange },
+      { label: 'Back after a break', data: flow.map(f => f && f.back), color: aqua },
+      { label: 'Left (not back that day)', data: flow.map(f => f && -f.left), color: yellow },
+    ],
+    stats: (() => {
+      const g = sum(flow.filter(Boolean).map(f => f.fresh + f.back)), l = sum(flow.filter(Boolean).map(f => f.left));
+      return `Quick ratio (new + back) ÷ left: ${l ? fmt(g / l, 2) : '–'} over the days shown. Above 1 the daily player count grows.`;
+    })(),
+  });
+  chartCard('Churn rate', `Share of everyone who has played who hasn't been back for ${state.gone} days or more.`, {
+    labels, percent: true, series: [{ label: 'Churn rate', data: pick(m.churn), color: blue, type: 'line' }],
+    stats: seriesStats(pickFull(m.churn), '', 1, true),
+  });
+
+  // Days since last played, on the last full day.
+  const buckets = [['Same day', 0, 0], ['1 day', 1, 1], ['2–3 days', 2, 3], ['4–7 days', 4, 7], ['8–14 days', 8, 14], ['15+ days', 15, 1e9]];
+  const sinceLast = m.since[lastFull] || [];
+  chartCard('Days since last played', `Everyone who has played, by how long ago they last opened 49 (as of ${dayLabel(m.days[lastFull].iv)}).`, {
+    labels: buckets.map(b => b[0]),
+    series: [{ label: 'Players', data: buckets.map(([, lo, hi]) => sinceLast.filter(d => d >= lo && d <= hi).length), color: blue }],
+    stats: `Mean ${fmt(mean(sinceLast), 1)} days · median ${fmt(median(sinceLast), 1)} days (players from before tracking count from the first check).`,
+  });
+
+  // Sessions per player.
+  const totals = [...perPlayer.values()];
+  const hist = [['1', 1, 1], ['2–3', 2, 3], ['4–7', 4, 7], ['8–15', 8, 15], ['16–31', 16, 31], ['32–63', 32, 63], ['64+', 64, 1e9]];
+  const sorted = [...totals].sort((a, b) => b - a);
+  const top = sorted.slice(0, Math.max(1, Math.ceil(sorted.length / 10)));
+  chartCard('Sessions per player', 'Players by how many sessions they had in the days shown.', {
+    labels: hist.map(h => h[0]),
+    series: [{ label: 'Players', data: hist.map(([, lo, hi]) => totals.filter(x => x >= lo && x <= hi).length), color: blue }],
+    stats: `${totals.length} players · mean ${fmt(mean(totals), 1)} · median ${fmt(median(totals), 1)} · 90th percentile ${fmt(quantile(totals, 0.9), 1)} · max ${fmt(sorted[0] || null)} · the top 10% had ${pct(sum(totals) ? sum(top) / sum(totals) : null)} of the sessions.`,
+  });
+  chartCard('Sessions per active player', 'On each day, sessions of the players who played: the mean and the median.', {
+    labels, digits: 1, series: [
+      { label: 'Mean', data: pick(m.perActiveMean), color: blue, type: 'line' },
+      { label: 'Median', data: pick(m.perActiveMedian), color: orange, type: 'line', dash: [5, 4] },
+    ], stats: seriesStats(pickFull(m.perActiveMean), '', 1),
+  });
+
+  // Retention.
+  retentionHeat(m);
+  chartCard('Retention curve', `Average over all start days, weighted by players (${state.ret}). Day 0 is always 100%.`, {
+    labels: m.curve.map(p => 'Day ' + p.k), percent: true,
+    series: [{ label: 'Still playing', data: m.curve.map(p => p.value), color: blue, type: 'line' }],
+    stats: m.curve.length ? m.curve.slice(1, 8).map(p => `D${p.k} ${pct(p.value)} (${p.players})`).join(' · ') : 'Not enough days yet.',
+  });
+
+  // TestFlight.
+  const ivs = idx.map(i => m.days[i].iv);
+  chartCard('Testers', 'TestFlight testers in all, those with 49 installed, and those who joined through the website link.', {
+    labels, beginAtZero: false, series: [
+      { label: 'Testers', data: ivs.map(iv => iv.testers), color: blue, type: 'line' },
+      { label: 'Installed', data: ivs.map(iv => iv.testersInstalled), color: orange, type: 'line', dash: [5, 4] },
+      { label: 'Website link', data: ivs.map(iv => iv.publicLink), color: aqua, type: 'line', dash: [2, 3] },
+    ],
+  });
+  chartCard('Installs and updates per day', 'Every build installed, so an update to a new build counts too.', {
+    labels, series: [
+      { label: 'Installs', data: ivs.map(iv => iv.installs), color: blue },
+      { label: `${state.ma}-day average`, data: movingAverage(ivs.map(iv => iv.installs), state.ma), color: orange, type: 'line' },
+    ], stats: seriesStats(ivs.filter(iv => !iv.partial).map(iv => iv.installs), '', 1),
+  });
+  chartCard('Crashes per 100 sessions', 'Crashes Apple received, against all sessions that day.', {
+    labels, digits: 1, series: [{ label: 'Crashes per 100 sessions', data: ivs.map(iv => iv.buildSessions ? iv.crashes / iv.buildSessions * 100 : null), color: blue }],
+    stats: `${sum(ivs.map(iv => iv.crashes))} crashes and ${sum(ivs.map(iv => iv.feedback))} feedback reports in the days shown.`,
+  });
+
+  summaryTable(m, idx, fullIdx);
+}
+
+function retentionHeat(m) {
+  const c = card('Retention by start day', `Of the players who first played on a day, the share still playing ${state.ret === 'classic' ? 'exactly' : 'on or after'} N days later. Hover a cell for the count.`, { wide: true });
+  const maxK = Math.min(15, Math.max(0, ...m.cohorts.map(r => r.cells.length)));
+  const heat = document.createElement('div'); heat.className = 'heat';
+  heat.style.gridTemplateColumns = `minmax(64px, auto) repeat(${maxK}, minmax(0, 1fr))`;
+  const add = (text, cls, style) => { const d = document.createElement('div'); d.className = cls; d.textContent = text; if (style) Object.assign(d.style, style); heat.appendChild(d); return d; };
+  add('Start', 'h row');
+  for (let k = 0; k < maxK; k++) add('D' + k, 'h');
+  const steps = ['--q100', '--q200', '--q300', '--q400', '--q500', '--q600', '--q700'].map(css);
+  const tip = document.getElementById('tip');
+  for (const r of m.cohorts) {
+    add(`${dayLabel(m.days[r.day].iv)} (${r.size})`, 'row');
+    for (let k = 0; k < maxK; k++) {
+      const v = r.cells[k];
+      if (v == null) { add('', 'none'); continue; }
+      const step = Math.min(6, Math.floor(v * 6.999));
+      const cell = add(pct(v), 'cell', { background: v === 0 ? css('--empty') : steps[step], color: v === 0 ? css('--muted') : step >= 3 ? '#ffffff' : '#0b0b0b' });
+      cell.tabIndex = 0;
+      const text = `${Math.round(v * r.size)} of ${r.size} players who started ${dayLabel(m.days[r.day].iv)}, day ${k}`;
+      cell.setAttribute('aria-label', text);
+      const showTip = e => { tip.textContent = ''; const b = document.createElement('b'); b.textContent = pct(v); tip.append(b, document.createElement('br'), document.createTextNode(text)); tip.style.display = 'block'; const rect = cell.getBoundingClientRect(); tip.style.left = Math.min(innerWidth - 240, rect.left) + 'px'; tip.style.top = (rect.bottom + 6) + 'px'; };
+      cell.onpointerenter = showTip; cell.onfocus = showTip;
+      cell.onpointerleave = cell.onblur = () => tip.style.display = 'none';
+    }
+  }
+  if (!m.cohorts.length) add('No players have started since tracking began.', 'row');
+  c.el.appendChild(heat);
+  const legend = document.createElement('div'); legend.className = 'legend';
+  for (const [i, label] of [[0, '0–14%'], [2, '29–42%'], [4, '57–71%'], [6, '86–100%']]) {
+    const s = document.createElement('span'); const sw = document.createElement('i'); sw.style.background = steps[i]; s.append(sw, document.createTextNode(label)); legend.appendChild(s);
+  }
+  c.el.appendChild(legend);
+  tableToggle(c, ['Start', 'Players', ...Array.from({ length: maxK }, (_, k) => 'D' + k)],
+    m.cohorts.map(r => [dayLabel(m.days[r.day].iv), r.size, ...Array.from({ length: maxK }, (_, k) => r.cells[k] == null ? '' : pct(r.cells[k]))]));
+}
+
+function summaryTable(m, idx, fullIdx) {
+  const c = card('All statistics', 'Over the full days shown (the partial day is left out).', { wide: true });
+  const rows = [
+    ['Daily active players', m.dau, 1, false],
+    ['Sessions per day', m.sessions, 1, false],
+    ['Weekly players (WAU)', m.wau, 1, false],
+    ['Stickiness', m.stick, 1, true],
+    ['New players per day', m.fresh, 2, false],
+    ['Churn rate', m.churn, 1, true],
+    ['Sessions per active player', m.perActiveMean, 2, false],
+  ];
+  const t = document.createElement('table');
+  const head = t.insertRow();
+  for (const h of ['', 'Last', 'Mean', 'Median', 'Std dev', 'Min', 'Max', 'Trend a day', 'Last 7 vs before']) { const th = document.createElement('th'); th.textContent = h; head.appendChild(th); }
+  for (const [name, series, d, isPct] of rows) {
+    const v = fullIdx.map(i => series[i]);
+    const show = x => x == null || !Number.isFinite(x) ? '–' : isPct ? pct(x, 1) : fmt(x, d);
+    const last7 = mean(v.slice(-7)), prior = mean(v.slice(0, -7));
+    const s = slope(v);
+    const tr = t.insertRow();
+    for (const cell of [name, show(v[v.length - 1]), show(mean(v)), show(median(v)), show(sd(v)), show(lowest(v)), show(highest(v)),
+      s == null ? '–' : (s >= 0 ? '+' : '') + (isPct ? pct(s, 1) : fmt(s, 2)),
+      prior == null || !prior ? '–' : (last7 >= prior ? '+' : '') + pct((last7 - prior) / prior)]) tr.insertCell().textContent = cell;
+  }
+  const wrap = document.createElement('div'); wrap.style.overflowX = 'hidden'; wrap.appendChild(t);
+  c.el.appendChild(wrap);
+}
+
+// MARK: Start
+
+function start() {
+  const when = new Date(DATA.generatedAt);
+  const last = DATA.intervals[DATA.intervals.length - 1];
+  document.getElementById('updated').textContent =
+    `TestFlight, ${DATA.intervals.length} days from ${DATA.firstCheck}, ${DATA.testerCount} testers. Built ${when.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}${last && last.partial ? ', with Apple\'s numbers right now as the last day' : ''}. ${ENC ? 'Updated every morning.' : 'Run python3 stats/dashboard.py to refresh.'}`;
+  const notes = document.getElementById('notes');
+  for (const text of [DATA.note, DATA.source.includes('not refreshed') ? 'The daily checks could not be refreshed from GitHub, so the newest ones may be missing.' : null,
+                      typeof Chart === 'undefined' ? 'The chart library could not load (offline?). The numbers and tables below still work.' : null].filter(Boolean)) {
+    const p = document.createElement('p'); p.className = 'note'; p.textContent = text; notes.appendChild(p);
+  }
+  if (typeof Chart === 'undefined') window.Chart = function () { return { destroy() {} }; };
+  controls();
+  render();
+}
+
+// MARK: Lock
+
+const unbase64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(password) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: unbase64(ENC.salt), iterations: ENC.iterations },
+                                            base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unbase64(ENC.iv) }, key, unbase64(ENC.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+const remembered = { get() { try { return localStorage.getItem('dash49-key'); } catch (e) { return null; } },
+                     set(v) { try { v ? localStorage.setItem('dash49-key', v) : localStorage.removeItem('dash49-key'); } catch (e) {} } };
+// Three wrong passwords lock this browser out for a day. It only slows down guessing by hand: the password itself
+// is what protects the data, since the encrypted page can be copied and tried elsewhere.
+const ATTEMPTS = 3, LOCKOUT = 24 * 3600 * 1000;
+const fails = { get() { try { return JSON.parse(localStorage.getItem('dash49-fails')) || { count: 0, until: 0 }; } catch (e) { return fails.memory; } },
+                set(v) { fails.memory = v; try { localStorage.setItem('dash49-fails', JSON.stringify(v)); } catch (e) {} },
+                memory: { count: 0, until: 0 } };
+function lockedUntil() {
+  const f = fails.get();
+  if (f.until && Date.now() < f.until) return f.until;
+  if (f.until) fails.set({ count: 0, until: 0 });
+  return 0;
+}
+function showLockout(until) {
+  document.getElementById('lock-password').disabled = true;
+  document.getElementById('lock-open').disabled = true;
+  const error = document.getElementById('lock-error');
+  error.textContent = `Too many wrong passwords. Try again after ${new Date(until).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}.`;
+  error.hidden = false;
+}
+async function unlock(password, remember) {
+  DATA = await decrypt(password);
+  fails.set({ count: 0, until: 0 });
+  remembered.set(remember ? password : null);
+  document.getElementById('lock').hidden = true;
+  document.getElementById('dashboard').hidden = false;
+  start();
+}
+(async function boot() {
+  if (!ENC) return start();
+  const form = document.getElementById('lock'), field = document.getElementById('lock-password'), error = document.getElementById('lock-error');
+  document.getElementById('dashboard').hidden = true;
+  const saved = remembered.get();
+  if (saved) { try { return await unlock(saved, true); } catch (e) { remembered.set(null); } }
+  form.hidden = false;
+  if (lockedUntil()) return showLockout(lockedUntil());
+  field.focus();
+  form.onsubmit = async e => {
+    e.preventDefault();
+    if (lockedUntil()) return showLockout(lockedUntil());
+    const button = document.getElementById('lock-open');
+    button.disabled = true; error.hidden = true;
+    try { await unlock(field.value, document.getElementById('lock-remember').checked); return; }
+    catch (err) {
+      const f = fails.get(), count = f.count + 1;
+      if (count >= ATTEMPTS) { fails.set({ count, until: Date.now() + LOCKOUT }); return showLockout(Date.now() + LOCKOUT); }
+      fails.set({ count, until: 0 });
+      const left = ATTEMPTS - count;
+      error.textContent = `That password doesn't open it. ${left} ${left === 1 ? 'try' : 'tries'} left.`;
+      error.hidden = false; field.select();
+    }
+    button.disabled = false;
+  };
+})();
+</script>
+</body>
+</html>
