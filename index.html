@@ -79,6 +79,7 @@ th:first-child, td:first-child { text-align: left; }
 th { color: var(--muted); font-weight: 500; }
 .tablewrap { max-height: 260px; overflow-y: auto; }
 
+.section-title { grid-column: 1 / -1; font-size: 18px; margin: 16px 0 0; }
 .heat { display: grid; gap: 2px; font-size: 11px; font-variant-numeric: tabular-nums; }
 .heat div { padding: 5px 2px; text-align: center; border-radius: 4px; min-width: 0; overflow: hidden; }
 .heat .h { color: var(--muted); background: transparent; }
@@ -141,6 +142,7 @@ details li { margin: 4px 0; }
       <li><b>Retention, classic:</b> of the players who started on a day, the share who played again exactly N days later. <b>Rolling:</b> the share who played N or more days later (steadier with few players).</li>
       <li><b>Moving average:</b> the mean of the last N days, including that day. <b>Trend:</b> the least-squares slope, change per day. <b>Std dev:</b> how much a day usually varies from the mean.</li>
       <li>Crashes and installs come per build, so they always include the team.</li>
+      <li><b>In the game</b> comes from 49's own statistics in iCloud (from build 38): one record a day per phone, from players who have statistics on and iCloud signed in. It counts App Store players too, and can't tell the team apart. A <b>player-day</b> is one player on one day.</li>
     </ul>
   </details>
 </main>
@@ -149,7 +151,7 @@ details li { margin: 4px 0; }
 <script>
 let DATA = /*__DATA__*/null;
 // The data, encrypted (AES-GCM, key from the password with PBKDF2), when the page is hosted. Null for the local copy.
-const ENC = {"iterations":600000,"salt":"hHXuw04I4Jks6bn1/OvA+g==","iv":"9DGtrUwJnE+otwM/","data":"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"};
+const ENC = {"iterations":600000,"salt":"4zbgGP5AbMH8LFg8sFi7nA==","iv":"JePriVyGjV0W6qdw","data":"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"};
 
 // MARK: State and controls
 
@@ -352,7 +354,7 @@ function chartCard(title, subtitle, { labels, series, stacked = false, percent =
         },
       },
       scales: {
-        x: { stacked, grid: { display: false }, border: { color: css('--axis') }, ticks: { color: muted, maxRotation: 0, autoSkipPadding: 12, font: { size: 11 } } },
+        x: { stacked, grid: { display: false }, border: { color: css('--axis') }, ticks: { color: muted, maxRotation: 0, autoSkip: labels.length > 8, autoSkipPadding: 12, font: { size: 11 } } },
         y: { stacked, beginAtZero, grid: { color: grid }, border: { display: false },
              ticks: { color: muted, precision: percent ? undefined : 0, font: { size: 11 }, callback: v => percent ? pct(v) : fmt(v, digits) },
              suggestedMax: percent ? 1 : undefined },
@@ -517,6 +519,7 @@ function render() {
   });
 
   summaryTable(m, idx, fullIdx);
+  gameSection();
 }
 
 // MARK: Summary
@@ -608,6 +611,7 @@ function summary(m, idx, fullIdx, lastFull) {
     for (const [head, rest] of items) { const li = document.createElement('li'); const b = document.createElement('b'); b.textContent = head; li.append(b, document.createTextNode(rest)); l.appendChild(li); }
     c.el.appendChild(l);
   };
+  for (const line of gameSummary()) says.push(line);
   list('What the data says', says, false);
   if (todo.length) list('What to look into, most important first', todo, true);
   const note = document.createElement('p'); note.className = 'small'; note.style.marginTop = '10px';
@@ -649,6 +653,128 @@ function retentionHeat(m) {
   c.el.appendChild(legend);
   tableToggle(c, ['Start', 'Players', ...Array.from({ length: maxK }, (_, k) => 'D' + k)],
     m.cohorts.map(r => [dayLabel(m.days[r.day].iv), r.size, ...Array.from({ length: maxK }, (_, k) => r.cells[k] == null ? '' : pct(r.cells[k]))]));
+}
+
+// MARK: In the game (49's own statistics)
+
+function gameSection() {
+  const title = document.createElement('h2'); title.className = 'section-title'; title.textContent = 'In the game';
+  document.getElementById('cards').appendChild(title);
+  const rows = (DATA.game || []).filter(r => (r.sessions || 0) + (r.games || 0) > 0);
+  if (!rows.length) {
+    const c = card('No in-game statistics yet', DATA.gameNote || 'They start with build 38: each phone saves its day in iCloud, and they appear here the morning after.', { wide: true });
+    return;
+  }
+  const days = [...new Set(rows.map(r => r.day))].sort();
+  const lastDay = days[days.length - 1];
+  const shift = (day, n) => { const d = new Date(day + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const from = state.range ? shift(lastDay, -(state.range - 1)) : days[0];
+  const shown = []; for (let d = from; d <= lastDay; d = shift(d, 1)) shown.push(d);
+  const inRange = rows.filter(r => r.day >= from);
+  const byDay = new Map(shown.map(d => [d, []])); for (const r of inRange) byDay.get(r.day)?.push(r);
+  const labels = shown.map(d => dayLabel({ date: d, partial: false }));
+  const blue = css('--s1'), orange = css('--s2'), aqua = css('--s3');
+  const per = f => shown.map(d => byDay.get(d).map(f));
+
+  const players = shown.map(d => byDay.get(d).length);
+  chartCard('Players in the game', 'Phones that opened 49 that day, with the moving average. Includes App Store players.', {
+    labels, series: [
+      { label: 'Players', data: players, color: blue },
+      { label: `${state.ma}-day average`, data: movingAverage(players, state.ma), color: orange, type: 'line' },
+    ], stats: seriesStats(players, '', 1),
+  });
+  const games = per(r => r.games || 0), minutes = per(r => (r.seconds || 0) / 60);
+  chartCard('Games per player-day', 'Finished games of each player who played that day: the mean and the median.', {
+    labels, digits: 1, series: [
+      { label: 'Mean', data: games.map(mean), color: blue, type: 'line' },
+      { label: 'Median', data: games.map(median), color: orange, type: 'line', dash: [5, 4] },
+    ], stats: seriesStats(games.flat(), '', 1).replace('trend', 'trend over player-days'),
+  });
+  chartCard('Minutes per player-day', 'Time 49 was open, per player who played that day.', {
+    labels, digits: 1, series: [
+      { label: 'Mean', data: minutes.map(mean), color: blue, type: 'line' },
+      { label: 'Median', data: minutes.map(median), color: orange, type: 'line', dash: [5, 4] },
+    ], stats: `Over all player-days: mean ${fmt(mean(minutes.flat()), 1)} · median ${fmt(median(minutes.flat()), 1)} · 90th percentile ${fmt(quantile(minutes.flat(), 0.9), 1)} minutes.`,
+  });
+  chartCard('Playing the Daily', 'Share of the day\'s players who finished at least one Daily Challenge.', {
+    labels, percent: true, series: [{ label: 'Played the Daily', data: shown.map(d => { const r = byDay.get(d); return r.length ? r.filter(x => x.dailyGames).length / r.length : null; }), color: blue, type: 'line' }],
+    stats: (() => { const all = inRange.length; const started = inRange.filter(r => r.dailyStarted).length; return `${pct(all ? inRange.filter(r => r.dailyGames).length / all : null)} of player-days finished a Daily, ${pct(all ? started / all : null)} started one. "Not now" on the Daily: ${sum(inRange.map(r => r.dailyNotNow || 0))} times.`; })(),
+  });
+
+  // Modes.
+  const tally = key => { const t = new Map(); for (const r of inRange) for (const [k, n] of Object.entries(r[key] || {})) t.set(k, (t.get(k) || 0) + n); return [...t.entries()].sort((a, b) => b[1] - a[1]); };
+  const kinds = tally('kinds'), styles = tally('styles');
+  const allGames = sum(kinds.map(k => k[1]));
+  chartCard('Games by kind', `Finished games in the days shown, ${allGames} in all.`, {
+    labels: kinds.map(k => k[0]), series: [{ label: 'Games', data: kinds.map(k => k[1]), color: blue }],
+    stats: kinds.slice(0, 5).map(([k, n]) => `${k} ${pct(allGames ? n / allGames : null)}`).join(' · ') +
+      ` · by style: ${styles.map(([k, n]) => `${k} ${pct(allGames ? n / allGames : null)}`).join(', ')}`,
+  });
+
+  // The first day.
+  const firstRows = rows.filter(r => r.firstDay === r.day && r.day >= from);
+  const later = new Set(rows.filter(r => r.day > r.firstDay).map(r => r.p));
+  const steps = [
+    ['Opened 49', firstRows.length],
+    ['Started the welcome', firstRows.filter(r => r.welcomeStep != null).length],
+    ['Finished the welcome', firstRows.filter(r => r.welcomeFinished).length],
+    ['Played a game', firstRows.filter(r => (r.games || 0) >= 1).length],
+    ['Played 3 games', firstRows.filter(r => (r.games || 0) >= 3).length],
+    ['Came back another day', firstRows.filter(r => later.has(r.p)).length],
+  ];
+  chartCard('The first day', `New players in the days shown (${firstRows.length}): how far they got on their first day, and whether they came back.`, {
+    labels: steps.map(s => s[0]), series: [{ label: 'Players', data: steps.map(s => s[1]), color: blue }],
+    stats: steps.slice(1).map(([name, n]) => `${name.toLowerCase()} ${pct(firstRows.length ? n / firstRows.length : null)}`).join(' · ') +
+      `. Tour finished ${firstRows.filter(r => r.tourFinished).length}, skipped ${firstRows.filter(r => r.tourSkipped).length}.`,
+  });
+
+  // Notifications.
+  const opened = tally('opened');
+  const latest = new Map(); for (const r of rows) if (!latest.has(r.p) || latest.get(r.p).day < r.day) latest.set(r.p, r);
+  const latestRows = [...latest.values()];
+  const share = f => latestRows.length ? latestRows.filter(f).length / latestRows.length : null;
+  chartCard('Notifications tapped', 'Which notifications brought players into 49, in the days shown.', {
+    labels: opened.length ? opened.map(o => o[0]) : ['none yet'], series: [{ label: 'Taps', data: opened.length ? opened.map(o => o[1]) : [0], color: blue }],
+    stats: `Notifications allowed for ${pct(share(r => r.notificationsAllowed))} of players, streak reminder on for ${pct(share(r => r.remindersOn))} (as of each player's last day). ` +
+      `${pct(inRange.length ? inRange.filter(r => Object.keys(r.opened || {}).length).length / inRange.length : null)} of player-days began with a tap on a notification.`,
+  });
+
+  // Where players who stopped were last.
+  const away = latestRows.filter(r => r.day <= shift(lastDay, -3));
+  const lastScreens = (() => { const t = new Map(); for (const r of away) { const k = r.lastScreen || 'unknown'; t.set(k, (t.get(k) || 0) + 1); } return [...t.entries()].sort((a, b) => b[1] - a[1]); })();
+  chartCard('Last screen before stopping', `Players away for 3 days or more (${away.length}): the screen 49 was on when they last left.`, {
+    labels: lastScreens.length ? lastScreens.map(x => x[0]) : ['nobody yet'], series: [{ label: 'Players', data: lastScreens.length ? lastScreens.map(x => x[1]) : [0], color: blue }],
+  });
+  const builds = (() => { const t = new Map(); for (const r of latestRows.filter(r => r.day >= shift(lastDay, -6))) { const k = r.build || '?'; t.set(k, (t.get(k) || 0) + 1); } return [...t.entries()].sort((a, b) => Number(b[0]) - Number(a[0])); })();
+  chartCard('Builds in use', 'Players of the last 7 days by the build they last used.', {
+    labels: builds.map(b => 'Build ' + b[0]), series: [{ label: 'Players', data: builds.map(b => b[1]), color: blue }],
+  });
+  const extras = [['Hints used', 'hints'], ['Rewarded ads watched', 'adsWatched'], ['Rooms created', 'roomsCreated'], ['Rooms joined', 'roomsJoined'], ['Steal games', 'stealGames'], ['Matchmaking started', 'queueStarted'], ['Games left before the end', 'left'], ['New personal bests', 'personalBests'], ['Purchases', 'purchases']];
+  const c = card('Everything else', 'Totals in the days shown, and how many players did each at least once.', { wide: true });
+  const t = document.createElement('table');
+  const head = t.insertRow(); for (const h of ['', 'Total', 'Per player-day', 'Players who did it']) { const th = document.createElement('th'); th.textContent = h; head.appendChild(th); }
+  const playersInRange = new Set(inRange.map(r => r.p)).size;
+  for (const [name, key] of extras) {
+    const total = sum(inRange.map(r => r[key] || 0)), who = new Set(inRange.filter(r => r[key]).map(r => r.p)).size;
+    const tr = t.insertRow();
+    for (const v of [name, fmt(total), fmt(inRange.length ? total / inRange.length : null, 2), `${who} of ${playersInRange}`]) tr.insertCell().textContent = v;
+  }
+  c.el.appendChild(t);
+}
+
+function gameSummary() {
+  const rows = (DATA.game || []).filter(r => (r.sessions || 0) + (r.games || 0) > 0);
+  if (!rows.length) return [];
+  const out = [];
+  const firsts = rows.filter(r => r.firstDay === r.day);
+  const later = new Set(rows.filter(r => r.day > r.firstDay).map(r => r.p));
+  if (firsts.length >= 3) {
+    const finished = firsts.filter(r => r.welcomeFinished).length, played = firsts.filter(r => (r.games || 0) >= 1).length, back = firsts.filter(r => later.has(r.p)).length;
+    out.push(['On their first day', ` (${firsts.length} new players in the game stats): ${pct(finished / firsts.length)} finished the welcome, ${pct(played / firsts.length)} finished a game, ${pct(back / firsts.length)} came back another day.`]);
+  }
+  const daily = rows.filter(r => r.dailyGames).length / rows.length;
+  out.push(['The Daily', ` is played on ${pct(daily)} of player-days. A typical player-day is ${fmt(median(rows.map(r => r.games || 0)), 1)} games and ${fmt(median(rows.map(r => (r.seconds || 0) / 60)), 1)} minutes.`]);
+  return out;
 }
 
 function summaryTable(m, idx, fullIdx) {
