@@ -65,6 +65,10 @@ p { margin: 0; }
 .card.wide { grid-column: 1 / -1; }
 .card header { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 8px; }
 .card header p { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+.summary h3 { font-size: 13px; margin: 12px 0 4px; }
+.summary ol, .summary ul { margin: 0; padding-left: 20px; }
+.summary li { margin: 4px 0; }
+.summary li b { font-weight: 600; }
 .card .chart { position: relative; height: 240px; }
 .card .stats { font-size: 12px; color: var(--ink-2); margin-top: 8px; }
 .toggle { font: inherit; font-size: 12px; border: 1px solid var(--ring); background: transparent; color: var(--ink-2); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
@@ -145,7 +149,7 @@ details li { margin: 4px 0; }
 <script>
 let DATA = /*__DATA__*/null;
 // The data, encrypted (AES-GCM, key from the password with PBKDF2), when the page is hosted. Null for the local copy.
-const ENC = {"iterations":600000,"salt":"2CDG2BJvgevWt/YOnJc8zA==","iv":"5LeNRz2BoOxAVYHi","data":"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"};
+const ENC = {"iterations":600000,"salt":"hHXuw04I4Jks6bn1/OvA+g==","iv":"9DGtrUwJnE+otwM/","data":"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"};
 
 // MARK: State and controls
 
@@ -414,6 +418,8 @@ function render() {
   tile('New players', fmt(sum(pick(m.fresh))), `in the days shown, ${fmt(m.first.size)} ever`);
   tile('Sessions a day', fmt(mean(pickFull(m.sessions)), 1), `median ${fmt(median(pickFull(m.sessions)), 1)} over full days`);
 
+  summary(m, idx, fullIdx, lastFull);
+
   // Daily players.
   const blue = css('--s1'), orange = css('--s2'), aqua = css('--s3'), yellow = css('--s4');
   chartCard('Daily active players', `Players who opened 49 that day, with the ${state.ma}-day moving average.`, {
@@ -511,6 +517,102 @@ function render() {
   });
 
   summaryTable(m, idx, fullIdx);
+}
+
+// MARK: Summary
+
+// Written from the numbers each time: what they say, and what to look into. Rules, not judgement: each line
+// names the numbers it rests on.
+function summary(m, idx, fullIdx, lastFull) {
+  const c = card('Summary', 'What the numbers say, worked out from the data each time the page is built.', { wide: true });
+  c.el.classList.add('summary');
+  const says = [], todo = [];
+  const label = i => dayLabel(m.days[i].iv);
+  const activeDays = new Map();
+  m.days.forEach((d, i) => { if (m.full[i]) for (const t of d.act.keys()) activeDays.set(t, (activeDays.get(t) || 0) + 1); });
+  const ever = m.first.size;
+
+  // Coming back.
+  const started = [...m.first.entries()].filter(([, f]) => f >= 0 && f < lastFull);
+  const oneDay = started.filter(([t]) => (activeDays.get(t) || 0) <= 1).length;
+  const early = started.filter(([, f]) => lastFull - f >= 5);
+  const recentDays = fullIdx.slice(-3);
+  const playedRecently = t => recentDays.some(i => m.days[i].act.has(t));
+  const earlyActive = early.filter(([t]) => playedRecently(t)).length;
+  const d7 = m.curve[7];
+  if (started.length) {
+    const share = oneDay / started.length;
+    says.push([`${share >= 0.3 ? 'Many players stop after the first day.' : 'Most players come back after their first day.'}`,
+      ` ${oneDay} of the ${started.length} players who started since tracking began played on one day only (${pct(share)}).` +
+      (early.length ? ` Of the ${early.length} who started 5 or more days ago, ${earlyActive} played in the last 3 days.` : '') +
+      (d7 && d7.value != null ? ` Day 7 retention is ${pct(d7.value)} (${state.ret}, ${d7.players} players).` : '')]);
+    if (share >= 0.3) todo.push(['Reasons to come back on day 2.', ` ${pct(share)} never played a second day. In TelemetryDeck, compare Welcome.step with Welcome.finished, and count Daily.started on players' first days.`]);
+    if (early.length >= 5 && earlyActive / early.length < 0.25) todo.push(['Keeping players past the first week.', ` Only ${earlyActive} of ${early.length} early players are still playing.`]);
+  }
+
+  // Daily players.
+  const dauFull = fullIdx.map(i => m.dau[i]);
+  const recent = mean(dauFull.slice(-3)), before = mean(dauFull.slice(-10, -3));
+  const peakAt = fullIdx.reduce((best, i) => m.dau[i] > m.dau[best] ? i : best, fullIdx[0]);
+  if (recent != null && before != null) {
+    const ratio = before ? recent / before : 1;
+    const trend = ratio < 0.8 ? 'Daily players are falling.' : ratio > 1.2 ? 'Daily players are rising.' : 'Daily players are about steady.';
+    says.push([trend, ` ${fmt(recent, 1)} a day over the last 3 full days, against ${fmt(before, 1)} in the days before. The most was ${m.dau[peakAt]} on ${label(peakAt)}.` +
+      (m.dau[lastFull] < recent ? ' Apple\'s counts can arrive a day late, so the last day may still rise.' : '')]);
+    if (ratio < 0.8) todo.push(['Why daily players dropped.', ` From ${fmt(before, 1)} to ${fmt(recent, 1)} a day. Check whether it lines up with a build or a change.`]);
+  }
+
+  // New players.
+  const freshFull = fullIdx.map(i => m.fresh[i]);
+  const newRecent = sum(freshFull.slice(-3)), newBefore = mean(freshFull.slice(-10, -3));
+  const testersNow = m.days[idx[idx.length - 1]].iv.testers, testersThen = m.days[idx[0]].iv.testers;
+  if (newBefore != null) {
+    const slowed = newRecent < newBefore * 3 * 0.6;
+    says.push([slowed ? 'New players have slowed down.' : 'New players keep arriving.',
+      ` ${newRecent} in the last 3 full days, against about ${fmt(newBefore * 3, 0)} in 3 days before that. Testers went from ${testersThen} to ${testersNow} in the days shown.`]);
+    if (slowed) todo.push(['Getting new players.', ' The tester pool has stopped growing. The App Store launch, or sharing the TestFlight link again, is what brings new players.']);
+  }
+
+  // How much they play.
+  const perPlayer = new Map();
+  for (const i of idx) for (const [t, n] of m.days[i].act) perPlayer.set(t, (perPlayer.get(t) || 0) + n);
+  const totals = [...perPlayer.values()].sort((a, b) => b - a);
+  const top = totals.slice(0, Math.max(1, Math.ceil(totals.length / 10)));
+  const topShare = sum(totals) ? sum(top) / sum(totals) : null;
+  const playerDays = idx.flatMap(i => [...m.days[i].act.values()]);
+  if (totals.length) {
+    says.push([topShare > 0.4 ? 'A small group plays most.' : 'Play is spread fairly evenly.',
+      ` The top 10% of players (${top.length}) had ${pct(topShare)} of the sessions. A typical playing day is ${fmt(median(playerDays), 1)} sessions, the most active player had ${totals[0]}.`]);
+    if (topShare > 0.4) todo.push(['Learning from the players who stay.', ' Ask the most active players what keeps them coming back.']);
+  }
+
+  // Gone.
+  const since = m.since[lastFull] || [];
+  const away3 = since.filter(d => d >= 3).length;
+  if (since.length) {
+    says.push([away3 / since.length > 0.5 ? 'More than half are away.' : 'Most players played recently.',
+      ` ${away3} of ${since.length} haven't played for 3 days or more, ${m.goneCount[lastFull]} for ${state.gone} days or more (churn ${pct(m.churn[lastFull])}).`]);
+    if (away3 / since.length > 0.5) todo.push(['Asking the players who stopped.', ` A short message to the ${away3} who've been away for 3 days or more is the quickest way to learn why.`]);
+  }
+
+  // Stability.
+  const ivs = idx.map(i => m.days[i].iv);
+  const crashes = sum(ivs.map(iv => iv.crashes)), allSessions = sum(ivs.map(iv => iv.buildSessions));
+  const crashRate = allSessions ? crashes / allSessions * 100 : null;
+  says.push([crashRate != null && crashRate > 1 ? 'Crashes need a look.' : 'Stability looks fine.', ` ${crashes} crashes in ${allSessions} sessions in the days shown (${fmt(crashRate, 2)} per 100).`]);
+  if (crashRate != null && crashRate > 1) todo.push(['Crashes.', ` ${fmt(crashRate, 2)} per 100 sessions. Check Xcode's crash reports for the builds in use.`]);
+
+  const list = (title, items, ordered) => {
+    const h = document.createElement('h3'); h.textContent = title; c.el.appendChild(h);
+    const l = document.createElement(ordered ? 'ol' : 'ul');
+    for (const [head, rest] of items) { const li = document.createElement('li'); const b = document.createElement('b'); b.textContent = head; li.append(b, document.createTextNode(rest)); l.appendChild(li); }
+    c.el.appendChild(l);
+  };
+  list('What the data says', says, false);
+  if (todo.length) list('What to look into, most important first', todo, true);
+  const note = document.createElement('p'); note.className = 'small'; note.style.marginTop = '10px';
+  note.textContent = `${ever} players${ever < 50 ? ', a small group, so read these as signals rather than proof' : ''}. TestFlight only counts sessions: why players leave needs TelemetryDeck or asking them.${state.team ? '' : ' Team testers are left out.'}`;
+  c.el.appendChild(note);
 }
 
 function retentionHeat(m) {
